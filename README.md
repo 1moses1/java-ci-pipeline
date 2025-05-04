@@ -1,78 +1,80 @@
-# Java CI Pipeline
+# Java CI Pipeline + Dockerized Release
 
-This repository contains a simple Java application integrated with a complete GitHub Actions-based CI pipeline that performs:
-- ✅ Code checkout
-- ✅ Java 17 setup
-- ✅ Maven build & test
-- ✅ Static code analysis using SonarCloud
-- ✅ Uploading of the final `.jar` artifact
+This repository contains a simple Java application integrated with a complete DevOps workflow powered by GitHub Actions. The pipeline is split into two key workflows:
 
----
+* ✅ `ci-pipeline.yml`: Handles Continuous Integration (build, test, code quality, artifact storage)
+* ✅ `release.yml`: Automates Docker image build and publication to Docker Hub upon GitHub release
 
-## Project Structure
+## 🚀 CI/CD Features
+
+### ✅ CI Pipeline (`ci-pipeline.yml`)
+* Code checkout
+* Java 17 setup
+* Maven build and test
+* Static code analysis using SonarCloud
+* Upload of final `.jar` build artifact
+
+### 📦 Release Pipeline (`release.yml`)
+* Triggered when a new GitHub Release is published
+* Builds the Java application into a `.jar`
+* Builds a Docker image from the `Dockerfile`
+* Tags Docker image with both the version (`v1.0.0`, etc.) and `latest`
+* Pushes Docker image to Docker Hub
+
+## 📁 Project Structure
 
 ```
 java-ci-pipeline/
 ├── .github/workflows/
-│   └── ci-pipeline.yml  # GitHub Actions CI workflow
+│   ├── ci-pipeline.yml   # GitHub Actions CI workflow
+│   └── release.yml       # GitHub Actions release workflow
+├── Dockerfile            # Containerization setup for the app
 ├── src/
 │   ├── main/java/com/example/App.java
 │   └── test/java/com/example/AppTest.java
-├── pom.xml              # Maven project descriptor
-└── target/              # Build output (not committed)
+├── pom.xml               # Maven project descriptor
+└── target/               # Build output (not committed)
 ```
 
----
+## 🛠 Technologies Used
 
-## Technologies Used
+* **Java 17** (Temurin)
+* **Maven** for build and dependency management
+* **JUnit** for unit testing
+* **SonarCloud** for static code analysis
+* **Docker** for containerization
+* **GitHub Actions** for CI/CD
 
-- **Java 17** (Temurin)
-- **Maven** for build and test
-- **JUnit** for testing
-- **SonarCloud** for code quality checks
-- **GitHub Actions** for CI pipeline
+## 🔐 GitHub Secrets Required
 
----
+### For SonarCloud (`ci-pipeline.yml`)
 
-## GitHub Actions Workflow (`ci-pipeline.yml`)
+| Secret Name | Description |
+|-------------|-------------|
+| `SONAR_TOKEN` | Token generated from SonarCloud account |
+| `SONAR_PROJECT_KEY` | Unique SonarCloud project key |
+| `SONAR_ORGANIZATION` | Your SonarCloud organization name |
 
-The workflow performs the following:
-1. **Triggers**: on every `push` or `pull_request` to `main`
-2. **Sets up** Java 17 with Temurin distribution
-3. **Builds** the app using `mvn clean install`
-4. **Runs tests** using `mvn test`
-5. **Analyzes** the code with SonarCloud using secure GitHub Secrets:
-   - `SONAR_TOKEN`
-   - `SONAR_PROJECT_KEY`
-   - `SONAR_ORGANIZATION`
-6. **Uploads** the `.jar` file to the workflow artifacts
+### For DockerHub (`release.yml`)
 
----
+| Secret Name | Description |
+|-------------|-------------|
+| `DOCKER_USERNAME` | Your Docker Hub username |
+| `DOCKER_PASSWORD` | Your Docker Hub personal access token |
 
-## SonarCloud Integration
+## 🧪 Sample Outputs
 
-To enable SonarCloud analysis, make sure the following GitHub repository secrets are configured:
+After running the workflows, you can expect:
 
-| Secret Name           | Description                               |
-|------------------------|-------------------------------------------|
-| `SONAR_TOKEN`          | Token generated from my SonarCloud account |
-| `SONAR_PROJECT_KEY`    | SonarCloud project key (e.g., `1moses1_java-ci-pipeline`) |
-| `SONAR_ORGANIZATION`   | Your SonarCloud organization key (e.g., `1moses1`) |
+* ✅ CI pipeline to confirm build and test success
+* ✅ SonarCloud report published
+* ✅ JAR uploaded to workflow artifacts
+* ✅ Docker image available on Docker Hub:
+   * `docker pull <username>/java-ci-app:latest`
+   * `docker pull <username>/java-ci-app:v1.0.0`
 
----
-
-## Sample Output
-
-After a successful run, you'll see:
-- ✅ Build: Passed
-- ✅ Tests: Passed
-- ✅ SonarCloud Analysis: Completed
-- ✅ Artifact: Downloadable `.jar` file under workflow artifacts
-
----
-
-## Author
+## 🧑‍💻 Author
 
 **Moise Iradukunda Ingabire**  
 DevOps Intern – Irembo  
-[GitHub Profile](https://github.com/1moses1)
+[GitHub Profile](https://github.com/your-username)
