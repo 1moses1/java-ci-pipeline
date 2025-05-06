@@ -1,11 +1,18 @@
-# Use official OpenJDK 17 runtime as the base image
-FROM eclipse-temurin:17-jdk
+# Using now a lightweight JRE-based image
+FROM eclipse-temurin:17-jre
 
-# Set the working directory inside the container
+# Create a non-root user
+RUN useradd -m appuser
+
+# Set the working directory
 WORKDIR /app
 
-# Copy the built JAR file into the container
-COPY target/*.jar app.jar
+# Copy the JAR explicitly (see fix #4 below)
+COPY target/java-ci-app-1.0.0.jar app.jar
 
-# Command to run the application
+# Change file ownership and switch user
+RUN chown -R appuser:appuser /app
+USER appuser
+
+# Run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
