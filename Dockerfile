@@ -1,16 +1,19 @@
-# Using now a lightweight JRE-based image
+# Use a lightweight JRE base image
 FROM eclipse-temurin:17-jre
 
 # Create a non-root user
 RUN useradd -m appuser
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy the JAR explicitly (see fix #4 below)
-COPY target/java-ci-app-1.0.0.jar app.jar
+# Accept build-time JAR name
+ARG JAR_NAME
 
-# Change file ownership and switch user
+# Copy the JAR dynamically using build argument
+COPY ${JAR_NAME} app.jar
+
+# Set file ownership and drop privileges
 RUN chown -R appuser:appuser /app
 USER appuser
 
